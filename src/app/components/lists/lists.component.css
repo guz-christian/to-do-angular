@@ -1,0 +1,20 @@
+.main-container{
+    width: 50%;
+    margin-inline: auto;
+}
+
+.spacer{
+    height: 50px;
+}
+.icon-size {
+    transform: scale(2);
+  }
+
+.test{
+    float: right;
+}
+
+.bottom-right{
+    margin-top: 50px;
+    margin-left: 75%;
+}

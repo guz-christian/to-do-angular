@@ -1,0 +1,27 @@
+<div *ngIf="task">
+    <button mat-button (click)="toggle_complete(task)">
+        <mat-icon>{{button_style}}</mat-icon>
+    </button>
+    
+    <div class="list-item-info">
+        <mat-list-item>
+            <div matListItemTitle [style.text-decoration]="text_decoration"> {{task.name}} </div>
+            <div matListItemLine>{{task.description}}</div>
+        </mat-list-item>           
+    </div>
+    
+    <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="current_list_id">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="list_locations" *ngIf="lists.length > 0">move</button>
+        <button mat-menu-item [routerLink]="['edit-task',task.id]">edit</button>
+        <button mat-menu-item (click)="delete_task(task)">delete</button>
+    </mat-menu>
+    <mat-menu #list_locations="matMenu">
+        <button *ngFor="let list of lists" mat-menu-item (click)="move_task(list.id,task,current_list_id)">
+            {{list.name}}
+        </button>
+    </mat-menu>
+    <mat-divider></mat-divider>
+</div>

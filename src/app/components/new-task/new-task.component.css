@@ -1,0 +1,23 @@
+.center-main{
+    display: block;
+    width: 300px;
+    margin: auto;
+    border-style: solid;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    border-width: medium;
+  }
+  
+  .row{
+    display: block;
+    margin: 10px;
+  }
+  
+  .spacer{
+    height: 50px;
+  }
+  
+  button{
+    margin-inline: 10px;
+  }

@@ -1,0 +1,26 @@
+.main-container{
+    width: 50%;
+    margin-inline: auto;
+}
+.list-item-info{
+    display: inline-block;
+    width: 50%;
+}
+
+.center-main{
+    width: 50%;
+    margin-inline: auto;
+}
+
+.icon-size {
+    transform: scale(2);
+  }
+
+.bottom-right{
+    margin-top: 50px;
+    margin-left: 75%;
+}
+
+.strike{
+    text-decoration: line-through;
+}

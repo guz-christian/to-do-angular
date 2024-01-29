@@ -1,0 +1,28 @@
+
+<mat-list class="center-main">
+    <div *ngFor="let task of active_tasks">
+        <app-task [task]="task" [lists]="lists" [current_list_id]="listId"
+            (toggled_complete)="toggle_complete($event)"
+            (moved_to_list)="remove_from_list($event)"
+            (task_deleted)="delete_task($event)">
+        </app-task>
+    
+    </div>
+</mat-list>
+<br>
+
+<br>
+
+<mat-expansion-panel *ngIf="completed_tasks.length > 0">
+    <mat-expansion-panel-header>
+      completed tasks
+    </mat-expansion-panel-header>
+    <button mat-button (click)="delete_completed_tasks()">Delete Completed Tasks</button>
+    <mat-list>
+        <div *ngFor="let task of completed_tasks">
+            <app-task 
+            [task]="task" [button_style]="'done'" [text_decoration]="'line-through'"
+            (toggled_complete)="toggle_complete($event)"></app-task>
+        </div>     
+    </mat-list>
+</mat-expansion-panel>

@@ -1,0 +1,21 @@
+<br>
+<div class="main-container">
+    <nav mat-tab-nav-bar  [tabPanel]="tabPanel">        
+        <a *ngIf="lists.length > 0" mat-tab-link (click)="delete_list()"> DELETE LIST</a>
+        <a mat-tab-link
+        routerLink="/new-list"><mat-icon fontIcon="add"></mat-icon> NEW LIST </a>
+
+    </nav>
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
+    <mat-tab-group (selectedTabChange)="tabChanged($event)">
+        <mat-tab *ngFor="let list of lists">
+            <ng-template mat-tab-label> {{list.name}} </ng-template>
+            <app-list [listId]="list.id" [lists]="collect_other_lists(list)" (list_changed)="refresh_list($event)"></app-list>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<button mat-button class="bottom-right" routerLink="/new-task" *ngIf="lists.length > 0">
+    <mat-icon class="icon-size" fontIcon="add"></mat-icon>
+</button>

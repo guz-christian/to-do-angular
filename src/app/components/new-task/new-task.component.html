@@ -1,0 +1,22 @@
+<br>
+<div class="center-main" *ngIf="list_title.length > 0">
+    <h3>{{list_title}}</h3>
+    <mat-form-field >
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Ex. Call Jenny" [(ngModel)]="new_task.name" name="first">
+    </mat-form-field>
+
+    <mat-form-field >
+        <mat-label>Description</mat-label>
+        <input matInput placeholder="" [(ngModel)]="new_task.description"  name="first">
+    </mat-form-field>
+    
+    <div class="row">
+        <button mat-raised-button color="accent" routerLink="">
+            CANCEL
+        </button>
+        <button mat-raised-button color="primary" routerLink="" (click)="save()">
+            SAVE
+        </button>
+    </div>
+</div>

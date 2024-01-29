@@ -1,0 +1,18 @@
+<br>
+
+<div class="center-main">
+    <mat-form-field>
+      <mat-label>List Name</mat-label>
+      <input matInput placeholder="Ex. Chores" [(ngModel)]="new_list.name" name="first">
+    </mat-form-field>
+    
+    <div class="row">
+        <button mat-raised-button color="accent" routerLink="">
+            CANCEL
+        </button>
+        <button mat-raised-button color="primary" (click)="save()" routerLink="">
+            SAVE
+        </button>
+    </div>
+
+</div>
