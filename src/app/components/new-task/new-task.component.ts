@@ -25,31 +25,31 @@ export class NewTaskComponent {
               private route: ActivatedRoute
     ){}
   
-  @Input()
-  set id(taskId:number){
-    if(taskId){
-    this.taskService.getSingleTask(taskId)
-    .subscribe((response) => {
-      this.new_task.description = response.description;
-      this.new_task.name = response.name;}
-    )}
-  }
+  // @Input()
+  // set id(taskId:number){
+  //   if(taskId){
+  //   this.taskService.getSingleTask(taskId)
+  //   .subscribe((response) => {
+  //     this.new_task.description = response.description;
+  //     this.new_task.name = response.name;}
+  //   )}
+  // }
 
   new_task = {
     name:'',
     description:''
   }
 
-  list_title: string = '';
+  // list_title: string = '';
 
-  save(){
-    this.taskService.postTask(this.new_task).subscribe()
-    // this.taskService.postTask(this.new_task)
-  }
+  // save(){
+  //   this.taskService.postTask(this.new_task).subscribe()
+  //   // this.taskService.postTask(this.new_task)
+  // }
 
   ngOnInit(){
-    this.listService.getSingleList()
-    .subscribe((response) => this.list_title = response.name);
+    // this.listService.getSingleList()
+    // .subscribe((response) => this.list_title = response.name);
   }
 
 }

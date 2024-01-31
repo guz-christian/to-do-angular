@@ -30,39 +30,39 @@ export class TaskComponent {
   ){}
 
   
-  @Input() public lists:List[] = [];
+  @Input() public otherLists:List[] = [];
   @Input() public task?:Task;
-  @Input() public current_list_id:number = 0;
+  @Input() public currentListId:number = 0;
 
   @Input() public button_style: string = 'check_box_outline_blank';
   @Input() public text_decoration: string = '';
 
-  @Output() public toggled_complete = new EventEmitter<Task>();
-  @Output() public moved_to_list = new EventEmitter<any>();
-  @Output() public task_deleted = new EventEmitter<Task>();
+  @Output() public madeChanges = new EventEmitter<Task>();
+  // @Output() public moved_to_list = new EventEmitter<any>();
+  // @Output() public task_deleted = new EventEmitter<Task>();
   
 
   toggle_complete(task:Task){
     this.taskService.toggleTaskComplete(task)
-    .subscribe(() => this.toggled_complete.emit(task))
+    .subscribe(() => this.madeChanges.emit())
   }
 
-  delete_task(task:Task){
-    this.taskService.deleteTask(task.id)
-    .subscribe(() => {
-      this.task_deleted.emit(task)
-    })
+  // delete_task(task:Task){
+  //   this.taskService.deleteTask(task.id)
+  //   .subscribe(() => {
+  //     this.task_deleted.emit(task)
+  //   })
 
-  }
+  // }
 
-  move_task(list_id:number,task:Task,current_list_id:number){
+  move(list_id:number,task_id:number){
     const row = {
-      task_id: task.id,
+      task_id: task_id,
       list_id: list_id
     }
-    this.taskService.moveTaskToList(current_list_id,row)
+    this.taskService.moveTaskToList(this.currentListId,row)
     .subscribe(() => {
-      this.moved_to_list.emit({list_id:list_id,task:task})
+      this.madeChanges.emit()
     })
   }
 

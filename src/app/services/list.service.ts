@@ -8,6 +8,7 @@ import { List, ListCreate } from '../models/List';
   providedIn: 'root'
 })
 export class ListService {
+  public listEdit:ListCreate = {name:''};
 
   constructor(private http:HttpClient) { }
 
@@ -28,14 +29,14 @@ export class ListService {
     return this.http.get<List>(apiCall)
   }
 
-  postList(new_list:ListCreate):Observable<List>{
+  postList():Observable<List>{
     const url = this.user_id + '/';
     const apiCall = this.rootUrl + url;
-    return this.http.post<List>(apiCall,new_list)
+    return this.http.post<List>(apiCall,this.listEdit)
   }
 
-  deleteList():Observable<any>{
-    const url = 'delete/' + this.current_list_id + '/';
+  deleteList(list_id:number):Observable<any>{
+    const url = 'delete/' + list_id + '/';
     const apiCall = this.rootUrl + url;
     return this.http.delete(apiCall)
   }

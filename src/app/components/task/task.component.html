@@ -10,18 +10,20 @@
         </mat-list-item>           
     </div>
     
-    <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="current_list_id">
+    <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="task.complete == false">
         <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item [matMenuTriggerFor]="list_locations" *ngIf="lists.length > 0">move</button>
-        <button mat-menu-item [routerLink]="['edit-task',task.id]">edit</button>
-        <button mat-menu-item (click)="delete_task(task)">delete</button>
+        <button mat-menu-item [matMenuTriggerFor]="list_locations" *ngIf="otherLists.length > 0">move</button>
+        <!-- <button mat-menu-item [routerLink]="['edit-task',task.id]">edit</button>
+        <button mat-menu-item (click)="delete_task(task)">delete</button> -->
     </mat-menu>
     <mat-menu #list_locations="matMenu">
-        <button *ngFor="let list of lists" mat-menu-item (click)="move_task(list.id,task,current_list_id)">
+        <button *ngFor="let list of otherLists" 
+        mat-menu-item
+        (click)="move(list.id, task.id)">
             {{list.name}}
         </button>
     </mat-menu>
-    <mat-divider></mat-divider>
 </div>
+

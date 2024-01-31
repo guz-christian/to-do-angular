@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,Input } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 
@@ -20,10 +20,12 @@ import { ListService } from '../../services/list.service';
 })
 export class NewListComponent {
   constructor(private listService:ListService){}
+  link = ''
 
   new_list = {name: ""}
-  save(){
-    this.listService.postList(this.new_list).subscribe()
+
+  setNewListValue(){
+    this.listService.listEdit.name = this.new_list.name;
   }
 
 }
