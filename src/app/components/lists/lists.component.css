@@ -18,3 +18,8 @@
     margin-top: 50px;
     margin-left: 75%;
 }
+
+.size{
+    max-width: 500px;
+    margin-inline: auto;
+}

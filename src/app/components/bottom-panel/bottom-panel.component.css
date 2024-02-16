@@ -3,6 +3,7 @@
     position: fixed;
     width: 100%;
     padding-block: 20px;
+    max-width: 500px;
 
 }
 
@@ -13,4 +14,5 @@
 
 @media screen {
     .main {bottom: 0px;}
+
 }

@@ -17,13 +17,16 @@
             New List
     </a>
   </nav>
-<mat-tab-nav-panel #tabPanel>
-    <router-outlet></router-outlet>
-</mat-tab-nav-panel>
+  
+  <div class="size">
+    <mat-tab-nav-panel #tabPanel>
+        <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
+    <app-bottom-panel
+    (removedList)="getLists(true)"
+    [safeListRoute]="safeListRoute"
+    ></app-bottom-panel>
 
-<app-bottom-panel
-(removedList)="getLists(true)"
-[safeListRoute]="safeListRoute"
-></app-bottom-panel>
+</div>
 
   
