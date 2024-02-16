@@ -1,106 +1,91 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
+import {RouterOutlet} from '@angular/router';
 
-import { RouterOutlet } from '@angular/router';
-
-import {MatTabChangeEvent, MatTabsModule} from '@angular/material/tabs';
+import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';;
-import { MatMenuModule } from '@angular/material/menu';
+import {MatMenuModule} from '@angular/material/menu';
 
-import { ListComponent } from '../list/list.component';
-import { NewListComponent } from '../new-list/new-list.component';
-import { ListService } from '../../services/list.service';
+import { List } from '../../../assets/models/List';
 
-import { List } from '../../models/List';
+import {BottomPanelComponent} from '../bottom-panel/bottom-panel.component';
+
+import {ListService} from '../../services/list.service';
 
 @Component({
   selector: 'app-lists',
   standalone: true,
-  imports: [MatTabsModule,MatToolbarModule,MatButtonModule,MatIconModule,
-    ListComponent,NewListComponent,
-    CommonModule,RouterLink,MatMenuModule,
-    RouterOutlet],
+  imports: [
+    CommonModule, RouterLink, RouterOutlet,
+    MatTabsModule, MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule,
+    BottomPanelComponent],
   templateUrl: './lists.component.html',
   styleUrl: './lists.component.css'
 })
 export class ListsComponent {
 
-  constructor(private listService:ListService){}
+  constructor(
+    private listService:ListService
+    ){}
 
-  currentListId = 0;
   lists:List[] = [];
-  needs_refreshment:boolean = false;
+  currentListId?:number;
+  activeLink?:string;
+  safeListRoute?:string;
 
-  activeLink = '/new-list';
-
-  get_link(list_id:number){
-    this.currentListId = list_id;
-    return "/list/" + list_id
-  }
-
-
-  get_lists(){
-    this.listService.getLists().subscribe((response) => {this.lists = response})
-  }
-
-  addList(){
-    this.listService.postList()
-    .subscribe((response) =>
+  getLists(list_deleted:boolean = false){
+    this.listService.getLists()
+    .subscribe((response) => 
     {
-      this.lists.push(response);
+      this.lists = response;
+      if(list_deleted == true)
+      {
+        this.listService.changeListId(this.lists[0].id)
+      }     
     })
   }
 
-  // set_current_list_id(tab_index:number){
-  //   if(this.lists.length > 0){
-  //     this.current_list_id = this.lists[tab_index].id;
-  //     this.listService.current_list_id = this.current_list_id
-
-  //   }
-  // }
-
-  // tabChanged(tabChangeEvent: MatTabChangeEvent):void{
-  //   if(this.needs_refreshment == true){
-  //     this.needs_refreshment = false;
-  //     this.get_lists()
-  //   }
-  //   this.set_current_list_id(tabChangeEvent.index);
-  // }
-
-  // refresh_list(event:any){
-  //   this.needs_refreshment = true;
-  // }
-  
-  deleteList(){
-    this.listService.deleteList(this.currentListId)
-    .subscribe(() => {
-      this.listService.getLists()
-      .subscribe((response) => {this.lists = response})})
-    
+  selectSafeList(current_list_id:number){
+    for(let i=0; i< this.lists.length; i++)
+    {
+      if(this.lists[i].id != current_list_id)
+      {
+        return this.lists[i]
+      }
+    }
+    return null
   }
-  
-  // collect_other_lists(list_exception:List){
-  //   let modified_lists = [];
-  //   for(let i = 0; i < this.lists.length; i++)
-  //   {
-  //     const current_list = this.lists[i];
-  //     if(list_exception != current_list)
-  //     {
-  //       modified_lists.push(current_list)
-  //     }
-  //   }
-    
-  //   return modified_lists
-    
-  // }
-  
   
   ngOnInit():void{
-    this.listService.getLists().subscribe((response) => {this.lists = response});
+    this.listService.getLists()
+    .subscribe((response) =>
+    {
+      this.lists = response;
+    });
+
+    this.listService.upToDate
+    .subscribe((response) =>
+    {
+      if(response == false)
+      {
+        this.getLists();
+        this.listService.changeUpToDate(true);
+      }
+    });
+
+    this.listService.listId
+    .subscribe((id) =>
+    {
+      setTimeout(() => 
+      {
+        this.activeLink = '/list/' + id;
+        this.currentListId = id;
+        this.safeListRoute = '/list/' + this.selectSafeList(id)?.id
+      },0)
+    });
 
   }
-
 }

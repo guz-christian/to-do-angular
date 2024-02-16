@@ -1,13 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-import { List, ListCreate } from '../models/List';
+import { List, ListCreate } from '../../assets/models/List';;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ListService {
+  private listIdSource = new BehaviorSubject(0);
+  listId = this.listIdSource.asObservable();
+
+  private upToDateSource = new BehaviorSubject(true);
+  upToDate = this.upToDateSource.asObservable();
+
+  changeListId(id:number){
+    this.listIdSource.next(id)
+  }
+
+  changeUpToDate(value:boolean){
+    this.upToDateSource.next(value)
+  }
   public listEdit:ListCreate = {name:''};
 
   constructor(private http:HttpClient) { }
@@ -22,17 +35,15 @@ export class ListService {
     return this.http.get<List[]>(apiCall)
   }
 
-  getSingleList():Observable<List>{
-    const url = 'single/' + this.current_list_id + '/';
-    const apiCall = this.rootUrl + url;
-
-    return this.http.get<List>(apiCall)
-  }
-
-  postList():Observable<List>{
+  postList(newList:ListCreate):Observable<List>{
     const url = this.user_id + '/';
     const apiCall = this.rootUrl + url;
-    return this.http.post<List>(apiCall,this.listEdit)
+    return this.http.post<List>(apiCall,newList)
+  }
+
+  editList(list_id:number, list:ListCreate):Observable<List>{
+    const apiCall = this.rootUrl + list_id + '/'
+    return this.http.put<List>(apiCall,list)
   }
 
   deleteList(list_id:number):Observable<any>{

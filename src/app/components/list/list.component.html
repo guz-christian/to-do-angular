@@ -1,10 +1,11 @@
 <mat-list>
-    <app-task *ngFor="let task of activeTasks"
-    (madeChanges)="refresh()" 
-    [task]="task"
+    <app-task *ngFor="let task of activeTasks" 
+    (toggledComplete)="seperateTasks()"
+    (taskLeftList)="removeTask($event)"
 
+    [task]="task"
     [otherLists]="otherLists"
-    [currentListId]="currentListId">
+    [button_style]="'check_box_outline_blank'">
     </app-task>
 </mat-list>
 
@@ -12,14 +13,15 @@
     <mat-expansion-panel-header>
       completed tasks
     </mat-expansion-panel-header>
-    <!-- <button mat-button (click)="delete_completed_tasks()">Delete Completed Tasks</button> -->
     <mat-list>    
         <app-task *ngFor="let task of completedTasks"
-        (madeChanges)="refresh()"
-        [task]="task" 
+        (toggledComplete)="seperateTasks()"
 
+        [task]="task" 
         [button_style]="'done'" 
         [text_decoration]="'line-through'">
         </app-task>
     </mat-list>
 </mat-expansion-panel>
+
+<br>

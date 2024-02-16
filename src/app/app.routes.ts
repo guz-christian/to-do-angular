@@ -7,9 +7,7 @@ import { NewTaskComponent } from './components/new-task/new-task.component';
 import { ListComponent } from './components/list/list.component';
 
 export const routes: Routes = [
-    // {path:'', component: ListsComponent},
     {path:'new-list', component: NewListComponent},
     {path: 'new-task', component: NewTaskComponent},
-    {path: 'edit-task/:id', component:NewTaskComponent},
     {path: 'list/:id', component: ListComponent}
 ];

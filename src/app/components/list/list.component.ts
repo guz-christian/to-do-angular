@@ -1,8 +1,6 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-
-import { TaskComponent } from '../task/task.component';
 
 import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
@@ -11,8 +9,10 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
 
-import { Task } from '../../models/Task';
-import { List } from '../../models/List';
+import { TaskComponent } from '../task/task.component';
+
+import { Task } from '../../../assets/models/Task';
+import { List } from '../../../assets/models/List';
 
 import { TaskService } from '../../services/task.service';
 import { ListService } from '../../services/list.service';
@@ -20,46 +20,44 @@ import { ListService } from '../../services/list.service';
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule,
-    MatListModule,MatButtonModule,MatIconModule,MatDividerModule,MatMenuModule,MatExpansionModule,
-    RouterLink,
-    TaskComponent],
+  imports: [
+    CommonModule, RouterLink,
+    MatListModule, MatButtonModule, MatIconModule, MatDividerModule, MatMenuModule, MatExpansionModule,
+    TaskComponent
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css'
 })
-export class ListComponent implements OnInit {
-  completedTasks: Task[] = [];
-  activeTasks: Task[] = [];
-  allTasks: Task[] = [];
-  otherLists: List[] = [];
-  currentListId: number = 0;
-
-  // @Input() public listId:number = 0;
-  // @Input() public lists:List[] = [];
-  // @Output() public list_changed = new EventEmitter<any>();
-
+export class ListComponent implements OnInit {  
   constructor(
     private taskService:TaskService,
     private listService: ListService,
     private route: ActivatedRoute
     ){}
 
-  loadTasks(id:number){
-    this.taskService.getTasks(id)
+  allTasks: Task[] = [];
+  completedTasks: Task[] = [];
+  activeTasks: Task[] = [];
+  otherLists: List[] = [];
+
+  loadTasks(list_id:number){
+    this.completedTasks = [];
+    this.activeTasks = [];
+    this.getOtherLists(list_id);
+
+    this.taskService.getTasks(list_id)
     .subscribe((response) => {
-      this.currentListId = id;
-      this.completedTasks = [];
-      this.activeTasks = [];
-      this.otherLists = [];
-      this.seperateTasks(response);
-      this.getOtherLists(id);
+      this.allTasks = response;
+      this.seperateTasks();
     })
   }
 
-  seperateTasks(tasks:Task[]){
-    for(let i = 0; i < tasks.length; i++)
+  seperateTasks(){
+    this.activeTasks = [];
+    this.completedTasks = [];
+    for(let i = 0; i < this.allTasks.length; i++)
     {
-      const task = tasks[i];
+      const task = this.allTasks[i];
       if(task.complete == true)
       {
         this.completedTasks.push(task)
@@ -72,6 +70,7 @@ export class ListComponent implements OnInit {
   }
 
   getOtherLists(id:number){
+    this.otherLists = [];
     this.listService.getLists()
     .subscribe((response) => {
       for(let i=0; i< response.length; i++)
@@ -83,80 +82,26 @@ export class ListComponent implements OnInit {
         }
       }
     })
-
   }
 
-  refresh(){
-    this.route.params
-    .subscribe((params) => {
-      this.loadTasks(Number(params['id']))
-    })
+  removeTask(task:Task){
+    if(task.complete == true)
+    {
+      const index: number = this.completedTasks.indexOf(task);
+      this.completedTasks.splice(index,1)
+    }
+    if(task.complete == false)
+    {
+      const index: number = this.activeTasks.indexOf(task);
+      this.activeTasks.splice(index,1)
+    }
   }
-
-  // get_tasks(){
-  //   this.taskService.getTasks(this.listId)
-  //   .subscribe((response) => {
-  //     this.set_tasks(response)
-  //   })
-  // }
-
-  // set_tasks(all_tasks:Task[]){
-  //   this.completed_tasks = [];
-  //   this.active_tasks = [];
-  //   for(let i = 0; i < all_tasks.length; i++){
-  //     const task = all_tasks[i];
-  //     if(task.complete == true){
-  //       this.completed_tasks.push(task)
-  //     }
-  //     if(task.complete == false){
-  //       this.active_tasks.push(task)
-  //     }
-  //   }
-  // }
-
-  
-  // delete_task(task:Task){
-  //   const index = this.active_tasks.indexOf(task);
-  //   this.active_tasks.splice(index,1)
-  // }
-  
-  // toggle_complete(task:Task){
-  //   if(task.complete == true)
-  //   {
-  //     const index = this.active_tasks.indexOf(task);
-  //     this.active_tasks.splice(index,1);
-  //     this.completed_tasks.push(task);
-  //   }
-  //   if(task.complete == false)
-  //   {
-  //     const index = this.completed_tasks.indexOf(task);
-  //     this.completed_tasks.splice(index,1);
-  //     this.active_tasks.push(task);
-  //   }
-    
-
-  // }
-
-  // remove_from_list(event:any){
-  //   const index = this.active_tasks.indexOf(event.task);
-  //   this.active_tasks.splice(index,1)
-  //   this.list_changed.emit(event)
-  // }
-
-  // delete_completed_tasks(){
-  //   for(let i=0; i < this.completed_tasks.length; i++)
-  //   {
-  //     const task = this.completed_tasks[i];
-
-  //     this.taskService.deleteTask(task.id).subscribe()
-  //   }
-  //   this.completed_tasks = []
-  // }
   
   ngOnInit():void{
     this.route.params
     .subscribe((params) => {
-      this.loadTasks(Number(params['id']))
+      this.loadTasks(Number(params['id']));
+      this.listService.changeListId(Number(params['id']))
     })
   }
 

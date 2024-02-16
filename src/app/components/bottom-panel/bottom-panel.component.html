@@ -1,0 +1,20 @@
+<div class="main">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_horizontal</mat-icon>
+    </button>
+    
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="safeListRoute" (click)="deleteList()">
+            <mat-icon>delete</mat-icon>
+            <span>Delete List</span>
+        </button>
+    </mat-menu>
+    
+    
+    <div class="push-right">
+        <button mat-fab routerLink="new-task">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+</div>

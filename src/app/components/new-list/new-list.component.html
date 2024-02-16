@@ -4,17 +4,21 @@
     <h2>Create new list</h2>
     <mat-form-field>
       <mat-label>List Name</mat-label>
-      <input matInput placeholder="Ex. Chores" [(ngModel)]="new_list.name" name="first" (input)="setNewListValue()">
+      <input matInput placeholder="Ex. Chores" [(ngModel)]="new_list.name" name="first">
     </mat-form-field>
     
-    <!-- <div class="row">
-        <button mat-raised-button color="accent" routerLink="">
+    <div class="row">
+        <button mat-raised-button color="accent"
+        [routerLink]="previousListRoute" 
+        (click)="cancel()" >
             CANCEL
         </button>
-        <button mat-raised-button color="primary" routerLink="{{link}}">
+        <button mat-raised-button color="primary"
+        [routerLink]="newListRoute" 
+        (click)="save() ">
             SAVE
         </button>
-    </div> -->
+    </div>
 
 </div>
 <p></p>

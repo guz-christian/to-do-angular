@@ -1,74 +1,76 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { ActivatedRoute} from '@angular/router';
-import { RouterLink } from '@angular/router';
-
-import { Task } from '../../models/Task';
-import { List } from '../../models/List';
-import { TaskService } from '../../services/task.service';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
 
 import {MatCardModule} from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatListModule} from '@angular/material/list';
 
+import { TaskListRow } from '../../../assets/models/relationship';
+import { Task } from '../../../assets/models/Task';
+import { List } from '../../../assets/models/List';
+
+import {ListService} from '../../services/list.service';
+import {TaskService} from '../../services/task.service';
+
+
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [CommonModule,MatCardModule,MatButtonModule,RouterLink,
-    MatIconModule, MatDividerModule,MatMenuModule,MatListModule],
+  imports: [CommonModule, RouterLink,
+    MatCardModule,MatButtonModule,MatIconModule, MatDividerModule,MatMenuModule,MatListModule],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css'
 })
 export class TaskComponent {
   constructor(
-    private route: ActivatedRoute,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private listService: ListService
   ){}
-
   
-  @Input() public otherLists:List[] = [];
+  currentListId:number = 0;
+  
   @Input() public task?:Task;
-  @Input() public currentListId:number = 0;
-
-  @Input() public button_style: string = 'check_box_outline_blank';
+  @Input() public otherLists:List[] = [];
+  @Input() public button_style: string = '';
   @Input() public text_decoration: string = '';
 
-  @Output() public madeChanges = new EventEmitter<Task>();
-  // @Output() public moved_to_list = new EventEmitter<any>();
-  // @Output() public task_deleted = new EventEmitter<Task>();
-  
+  @Output() public toggledComplete = new EventEmitter();
+  @Output() public taskLeftList = new EventEmitter<Task>()
 
-  toggle_complete(task:Task){
+  toggleComplete(task:Task){
     this.taskService.toggleTaskComplete(task)
-    .subscribe(() => this.madeChanges.emit())
+    .subscribe(() => this.toggledComplete.emit())
   }
 
-  // delete_task(task:Task){
-  //   this.taskService.deleteTask(task.id)
-  //   .subscribe(() => {
-  //     this.task_deleted.emit(task)
-  //   })
-
-  // }
-
   move(list_id:number,task_id:number){
-    const row = {
+    const row: TaskListRow = {
       task_id: task_id,
       list_id: list_id
     }
     this.taskService.moveTaskToList(this.currentListId,row)
     .subscribe(() => {
-      this.madeChanges.emit()
+      this.taskLeftList.emit(this.task)
     })
   }
 
-
+  deleteTask(){
+    this.taskService.deleteTask(this.task?.id!)
+    .subscribe(() =>
+    {
+      this.taskLeftList.emit(this.task)
+    })
+  }
 
   ngOnInit(){
+    this.listService.listId
+    .subscribe((response) => 
+    {
+      this.currentListId = response;
+    })
 
   }
 

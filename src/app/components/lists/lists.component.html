@@ -2,33 +2,28 @@
 
 <nav mat-tab-nav-bar [tabPanel]="tabPanel">
     <a *ngFor="let list of lists" mat-tab-link
-      routerLink="{{get_link(list.id)}}"
-      (click)="activeLink = get_link(list.id)"
-      [active]="activeLink == get_link(list.id)"> {{list.name}} </a>
+        [routerLink]="'/list/'+list.id"
+        (click)="activeLink = '/list/'+list.id"
+        [active]="activeLink == '/list/'+list.id"> 
       
-      <a mat-tab-link 
-      routerLink="/new-list"
-      (click)="activeLink = '/new-list'"
-      [active]="activeLink == '/new-list'">
-          <mat-icon fontIcon="add"></mat-icon>
-          New List
-      </a>
+        {{list.name}} 
+    </a>
+      
+    <a mat-tab-link 
+        routerLink="/new-list"
+        (click)="activeLink = '/new-list'"
+        [active]="activeLink == '/new-list'">
+        <mat-icon fontIcon="add"></mat-icon>
+            New List
+    </a>
   </nav>
 <mat-tab-nav-panel #tabPanel>
     <router-outlet></router-outlet>
 </mat-tab-nav-panel>
 
-<div *ngIf="activeLink == '/new-list'">
-    <button mat-flat-button color="primary"
-    (click)="addList()">
-        Save
-    </button>
-</div>
-
-
-<button mat-flat-button color="primary" *ngIf="activeLink != '/new-list'"
-(click)="deleteList()">
-    Delete List
-</button>
+<app-bottom-panel
+(removedList)="getLists(true)"
+[safeListRoute]="safeListRoute"
+></app-bottom-panel>
 
   
